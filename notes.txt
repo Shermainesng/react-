@@ -1,0 +1,32 @@
+vscode settings (settings.json)
+- setting up JS files into Javascript react files automatically
+- adding Prettier + add in some settings
+
+create a package.json file
+- npm init-y
+- npm install react react-dom
+- npm install webpack webpack-cli webpack-dev-server (to compile and transpile JSX into JS code that browsers can understand)
+
+npm webpack.config.js
+- filename of the newly bundled file is bundled.js
+- in index.html, <script src = "/bundled.js"></script>
+- npm run dev and then go to localhost:3000
+
+adding routing (Main.js)
+- import {BrowserRouter,Routes, Route} from 'react-router-dom'
+- add routes into code in the function in Main.js
+- in the footer that contains links to all the different routes,
+   - import {Link} from 'react-router-dom'
+   - change <a> to <Link>
+   - change <href> to <to>
+
+setting up a container for each page to keep width consistent (Container.js)
+- using ternary operator to give a different class depending on current size of each page's content
+- <HouseGuest> needs a wider container, so a larger container is rendered
+- <About> and <Terms> need a smaller container, so smaller one is rendered
+
+setting up tab name for each webpage (must set up manually for client-side rendering)
+- eg when i click on 'about us' page, i want the tab to be changed to 'About Us'
+- create a Page component, and use useEffect do render document title
+- can import Container into the Page component too.
+- just give a <Page title=''> and name title for each of the page where we want the tabs to be changed
