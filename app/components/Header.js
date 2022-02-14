@@ -16,6 +16,7 @@ function Header(props) {
           </Link>
         </h4>
         {appState.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+        {/* look at the global state to see if user has logged in or not */}
       </div>
     </header>
   );

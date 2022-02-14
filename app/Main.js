@@ -1,5 +1,6 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import ReactDOM from "react-dom";
+import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Axios from "axios";
 Axios.defaults.baseURL = "http://localhost:8080";
@@ -17,33 +18,65 @@ import Terms from "./components/Terms";
 import CreatePost from "./components/CreatePost";
 import ViewSinglePost from "./components/ViewSinglePost";
 import FlashMessages from "./components/FlashMessages";
+import Profile from "./components/Profile";
 
 function Main() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem("complexappToken")),
-    flashMessages: []
+    flashMessages: [],
+    user: {
+      token: localStorage.getItem("complexAppToken"),
+      username: localStorage.getItem("complexAppUsername"),
+      avatar: localStorage.getItem("complexAppAvatar")
+    }
   };
 
-  function ourReducer(state, action) {
+  // function ourReducer(state, action) {
+  function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
-        return { loggedIn: true, flashMessages: state.flashMessages };
+        // return { loggedIn: true, flashMessages: state.flashMessages };
+        draft.loggedIn = true;
+        draft.user = action.data;
+        return;
       case "logout":
-        return { loggedIn: false, flashMessages: state.flashMessages };
+        // return { loggedIn: false, flashMessages: state.flashMessages };
+        draft.loggedIn = false;
+        return;
       case "flashMessage":
-        return { loggedIn: state.loggedIn, flashMessages: state.flashMessages.concat(action.value) };
+        // return { loggedIn: state.loggedIn, flashMessages: state.flashMessages.concat(action.value) };
+        draft.flashMessages.push(action.value); //we want to directly modify that array
+        return;
     }
   }
 
-  const [state, dispatch] = useReducer(ourReducer, initialState);
+  // const [state, dispatch] = useReducer(ourReducer, initialState);
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+  // const [loggedIn, setLoggedIn] = useState(Boolearn(localStorage.getItem))
+  // const [flashMessages, setFlashMessages] = useState([])
+  // function addFlashMessage
+
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("complexappToken", state.user.token);
+      localStorage.setItem("complexappUsername", state.user.username);
+      localStorage.setItem("complexappAvatar", state.user.avatar);
+    } else {
+      localStorage.removeItem("complexappToken");
+      localStorage.removeItem("complexappUsername");
+      localStorage.removeItem("complexappAvatar");
+    }
+  }, [state.loggedIn]); //anytime the state of loggedIn changes, the function will run
 
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
+        {/* separate it so that components don't have to render unneccessary */}
         <BrowserRouter>
           <FlashMessages messages={state.flashMessages} />
           <Header />
           <Routes>
+            <Route path="/profile/:username/*" element={<Profile />} />
             <Route path="/" element={state.loggedIn ? <Home /> : <HomeGuest />} />
             <Route path="/post/:id" element={<ViewSinglePost />} />
             <Route path="/create-post" element={<CreatePost />} />

@@ -30,3 +30,38 @@ setting up tab name for each webpage (must set up manually for client-side rende
 - create a Page component, and use useEffect do render document title
 - can import Container into the Page component too.
 - just give a <Page title=''> and name title for each of the page where we want the tabs to be changed
+
+SECTION 6
+useReducer and Context
+- StateContext and DispatchContext
+- import them into Main.js
+- access global state in Header.js (use StateContext)
+- HeaderLoggedIn, HeaderLoggedOut and CreatePost.js (use DispatchContext) and pass in the type of action we want to dispatch
+- being able to define all my complex logic in one place and not having to babysit states elsewhere, just dispatch actions carefree and not having to care how it is done
+
+Immer
+- current problem: when defining the different types of action that gets dispatched in Main.js, we need to update the state of our app for both properties (even if i'm not updating flashMessages) because in React we need to return a new object, can't modify/mutate existing state objects
+- will be easier if we can just modify the state that we want to change
+IMMER helps to provide a 'draft' of state so we can directly mutate that draft, and immer will give that draft object back to React
+- npm install immer use-immer
+
+useEffect practice
+- structure our code so that all the getItem.LocalStorage and setItem.LocalStorage all takes place in one file (Main.js)
+- saving and loading same pieces of data to local storage from different files is a big source of bugs and problems
+- we don't want to be working with localStorage from multiple files within our app
+- deal with localStorage stuff in Main.js, then in components just pull from state
+- Main.JS - add localStorage states to initialState, then useEffect to add removeItem and setItem
+- can pull the state in HeaderLoggedIn, HeaderLoggedOut, CreatePost, Home
+
+Section 7 - BUILD THE app
+
+Profile screen (upon clicking on avatar)
+- Profile.js --> want to use Axios to send a request to server to get name, avatar, how many posts etc (want to retrieve name from URL that we have set in HeaderLoggedIn.js)
+- import {useParams} for Profile.js to access the URL.
+- save the username as a variable, then can send it off to Axios to request more info from the backend
+
+Load Posts on Profile screen
+- we want to load the posts that user has created
+- in ProfilePosts.js, we want to send a request to backend to load posts that were created by that user --> GET request
+- will return an array of posts
+- we want to loop through that raw data of posts and display them
