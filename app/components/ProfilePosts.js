@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { Link } from "react-router-dom";
+import LoadingDotsIcon from "./LoadingDotsIcon";
 
 function ProfilePosts() {
   const { username } = useParams();
@@ -22,7 +23,7 @@ function ProfilePosts() {
     fetchPosts();
   }, []); //we only want to run this when component first renders
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingDotsIcon />;
 
   return (
     <div className="list-group">

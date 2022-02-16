@@ -65,3 +65,13 @@ Load Posts on Profile screen
 - in ProfilePosts.js, we want to send a request to backend to load posts that were created by that user --> GET request
 - will return an array of posts
 - we want to loop through that raw data of posts and display them
+- import Link for client-side routing
+
+Markdown in React
+- **bold**
+- *italic*
+- heading level 3: ###
+- heading level 4: ####
+- npm install react-markdown
+
+SECTION 8
