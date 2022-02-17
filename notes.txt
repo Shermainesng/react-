@@ -75,3 +75,9 @@ Markdown in React
 - npm install react-markdown
 
 SECTION 8
+Tooltips
+- npm install react-tooltip
+- on ViewSinglePost.js, add tooltip for the 'edit' and 'trash' for each post
+
+click on 'edit' icon and edit a post
+- create new component <EditPost.js>
