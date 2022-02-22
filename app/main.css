@@ -201,6 +201,7 @@ textarea.tall-textarea {
 .search-overlay-enter-active {
   opacity: 1;
   transform: scale(1);
+  /* normal size */
   transition: 0.33s visibility ease-in-out, 0.33s opacity ease-in-out, 0.33s transform ease-in-out;
 }
 

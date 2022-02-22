@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { Link } from "react-router-dom";
 import LoadingDotsIcon from "./LoadingDotsIcon";
-import Post from "./Post";
 
-function ProfilePosts() {
+function ProfileFollowing() {
   const { username } = useParams();
   const [isLoading, setIsLoading] = useState(true); //is axios request still loading the data? as long as its true (still loading), we want to load an animated loading icon
   const [posts, setPosts] = useState([]);
@@ -13,7 +12,7 @@ function ProfilePosts() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await Axios.get(`profile/${username}/posts`);
+        const response = await Axios.get(`profile/${username}/following`);
         console.log(response.data);
         setPosts(response.data); //set the array of posts as the posts variable
         setIsLoading(false);
@@ -28,22 +27,15 @@ function ProfilePosts() {
 
   return (
     <div className="list-group">
-      {posts.map(post => {
-        {
-          /* const date = new Date(post.createdDate);
-        const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; //date are 0 based
+      {posts.map((follower, index) => {
         return (
-          //when looping through arrays and displaying each one, do give each one a unique key
-          <Link key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action">
-            <img className="avatar-tiny" src={post.author.avatar} /> <strong>{post.title}</strong> on
-            <span className="text-muted small">{dateFormatted} </span>
+          <Link key={index} to={`/profile/${follower.username}`} className="list-group-item list-group-item-action">
+            <img className="avatar-tiny" src={follower.avatar} /> {follower.username}
           </Link>
-        ); */
-        }
-        return <Post noAuthor={true} post={post} key={post._id} />;
+        );
       })}
     </div>
   );
 }
 
-export default ProfilePosts;
+export default ProfileFollowing;

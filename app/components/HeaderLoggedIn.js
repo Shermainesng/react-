@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 import DispatchContext from "../DispatchContext";
 import StateContext from "../StateContext"; //so i can access the user state to remove avatar when user signs out
 
@@ -14,19 +15,27 @@ function HeaderLoggedIn(props) {
     // localStorage.removeItem("complexappAvatar");
   }
 
+  function handleSearchIcon(e) {
+    e.preventDefault();
+    appDispatch({ type: "openSearch" }); //when user clicks on the search icon, send a app dispatch to set isSearchOpen to true
+  }
+
   return (
     <div className="flex-row my-3 my-md-0">
-      <a href="#" className="text-white mr-2 header-search-icon">
+      <a data-for="search" data-tip="Search" onClick={handleSearchIcon} href="#" className="text-white mr-2 header-search-icon">
         <i className="fas fa-search"></i>
       </a>
-      <span className="mr-2 header-chat-icon text-white">
+      <ReactTooltip place="bottom" id="search" className="custom-tooltip" />{" "}
+      <span data-for="chat" data-tip="Chat" className="mr-2 header-chat-icon text-white">
         <i className="fas fa-comment"></i>
         <span className="chat-count-badge text-white"> </span>
       </span>
-      <Link to={`/profile/${appState.user.username}`} className="mr-2">
+      <ReactTooltip place="bottom" id="chat" className="custom-tooltip" />{" "}
+      <Link data-for="profile" data-tip="My Profile" to={`/profile/${appState.user.username}`} className="mr-2">
         {/* <img className="small-header-avatar" src={localStorage.getItem("complexappAvatar")} /> */}
         <img className="small-header-avatar" src={appState.user.avatar} />
       </Link>
+      <ReactTooltip place="bottom" id="profile" className="custom-tooltip" />
       <Link className="btn btn-sm btn-success mr-2" to="/create-post">
         Create Post
       </Link>

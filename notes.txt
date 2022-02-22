@@ -81,3 +81,43 @@ Tooltips
 
 click on 'edit' icon and edit a post
 - create new component <EditPost.js>
+- set up route for the edit post component
+- want to display the same 'create post' form on <EditPost.js>, but with pre-populated content (from the og post)
+- use reducer and dispatch to send new state to the server when we update the post
+
+client-side validations
+- don't allow users to submit form with blank fields
+- use onBlur - when user clicks on another part of the form but left the previous section blank
+
+allow users to go back to post from the edit page
+- go back to {`post/id`}, but if id don't exist, we don't want to dispatch 'fetchComplete' because there is no post to get
+- render <NotFOund> if post does not exist
+- also don't allow users to edit others' posts - backend already ensures this, but we should use frontend for UX too
+
+SECTION 9
+Seach Overlay
+- when we click on the search icon, the search bar comes down
+- add a new state isSearchOpen, if its true then display <Search />. dispatch actions to change to false or true using 'openSearch' and 'closeSearch'
+
+Animate effects when i close the search bar
+- using css to animate it is tricky, as when i close the search bar, react removes the component from the DOM. can't animate objects that aren't even in the DOM
+- use package: React Transition Group
+
+React Transition Group
+- npm install react-transition-group
+- import { CSSTransition } from "react-transition-group"; in Main
+- in CSS, add css classes with base name
+
+Search functionality
+- when user types, we load up results on the fly
+- we send a network request whenever user stops typing for 700ms (instead of after every letter)
+
+SECTION 10
+Let users follow each other
+- In profile.js, use useImmer instead so we have more states to play with
+
+Switch tabs and can see follower counts
+- import NavLink + set up new routes in Profile.js
+
+Make home page come to life
+- display the posts of users that i follow

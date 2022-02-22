@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useImmerReducer } from "use-immer";
 import Page from "./Page";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import LoadingDotsIcon from "./LoadingDotsIcon";
 import StateContext from "../StateContext";
 import DispatchContext from "../DispatchContext";
+import NotFound from "./NotFound";
 
 function EditPost() {
+  const navigate = useNavigate();
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
 
@@ -25,7 +27,8 @@ function EditPost() {
     isFetching: true,
     isSaving: false, //when we click on that button to update the post. set this to true when user clicks on the btn
     id: useParams().id,
-    sendCount: 0 //how many times we've tried to send an Axios request
+    sendCount: 0, //how many times we've tried to send an Axios request
+    notFound: false
   };
 
   function ourReducer(draft, action) {
@@ -72,6 +75,9 @@ function EditPost() {
           draft.body.message = "You must provide body content";
         }
         return;
+      case "notFound":
+        draft.notFound = true;
+        return;
     }
   }
 
@@ -90,9 +96,16 @@ function EditPost() {
     async function fetchPost() {
       try {
         const response = await Axios.get(`post/${state.id}`, { cancelToken: ourRequest.token });
-        // console.log(response.data);
-        // setPost(response.data); //set the array of posts as the posts variable
-        dispatch({ type: "fetchComplete", value: response.data }); //what should happen to our state when this action occurs        setIsLoading(false);
+        if (response.data) {
+          dispatch({ type: "fetchComplete", value: response.data }); //what should happen to our state when this action occurs
+          if (appState.user.username != response.data.author.username) {
+            appDispatch({ type: "flashMessage", value: "You do not have permission to edit that post" });
+            //redirect to homepage
+            navigate("/");
+          }
+        } else {
+          dispatch({ type: "notFound" });
+        }
       } catch (e) {
         console.log("there was a problem or the request was cancelled");
       }
@@ -124,6 +137,10 @@ function EditPost() {
     }
   }, [state.sendCount]);
 
+  if (state.notFound) {
+    return <NotFound />;
+  }
+
   if (state.isFetching)
     return (
       <Page title="...">
@@ -133,7 +150,10 @@ function EditPost() {
 
   return (
     <Page title="Edit Post">
-      <form onSubmit={submitHandler}>
+      <Link className="small font-weight-bold" to={`/post/${state.id}`}>
+        &laquo; Back to post permalink
+      </Link>
+      <form className="mt-3" onSubmit={submitHandler}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">
             <small>Title</small>
