@@ -23,6 +23,7 @@ import Profile from "./components/Profile";
 import EditPost from "./components/EditPost";
 import NotFound from "./components/NotFound";
 import Search from "./components/Search";
+import Chat from "./components/Chat";
 
 function Main() {
   const initialState = {
@@ -33,7 +34,9 @@ function Main() {
       username: localStorage.getItem("complexAppUsername"),
       avatar: localStorage.getItem("complexAppAvatar")
     },
-    isSearchOpen: false
+    isSearchOpen: false,
+    isChatOpen: false,
+    unreadChatCount: 0
   };
 
   // function ourReducer(state, action) {
@@ -58,6 +61,18 @@ function Main() {
       case "closeSearch":
         draft.isSearchOpen = false;
         return;
+      case "toggleChat":
+        draft.isChatOpen = !draft.isChatOpen;
+        return;
+      case "closeChat":
+        draft.isChatOpen = false;
+        return;
+      case "incrementUnreadChatCount":
+        draft.unreadChatCount++;
+        return;
+      case "clearUnreadChatCount":
+        draft.unreadChatCount = 0;
+        return;
     }
   }
 
@@ -78,6 +93,29 @@ function Main() {
       localStorage.removeItem("complexappAvatar");
     }
   }, [state.loggedIn]); //anytime the state of loggedIn changes, the function will run
+
+  //check if user's token has expired or not on first render
+  useEffect(() => {
+    if (state.loggedIn) {
+      //this function won't run when the component renders, but only if request count is at least 1
+      //send axios request here
+      const ourRequest = Axios.CancelToken.source(); //cancel axios request if this component unmounts in the middle of the request
+      async function fetchResults() {
+        try {
+          const response = await Axios.post("/checkToken", { token: state.user.token }, { cancelToken: ourRequest.token }); //will return true if token is value, false if not valid
+          if (!response.data) {
+            //only if server sends us false (token is not valid)
+            dispatch({ type: "logout" });
+            dispatch({ type: "flashMessage", value: "Your session has expired, please log in again" });
+          }
+        } catch (e) {
+          console.log("there was a prob or request was cancelled");
+        }
+      }
+      fetchResults();
+      return () => ourRequest.cancel();
+    }
+  }, []);
 
   return (
     <StateContext.Provider value={state}>
@@ -103,6 +141,7 @@ function Main() {
             {/* unmountOnExit - if 'in' is false, we want to remove the search component from the dom */}
             <Search />
           </CSSTransition>
+          <Chat />
           <Footer />
         </BrowserRouter>
       </DispatchContext.Provider>

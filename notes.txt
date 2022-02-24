@@ -121,3 +121,31 @@ Switch tabs and can see follower counts
 
 Make home page come to life
 - display the posts of users that i follow
+
+SECTION 11
+- chat functionality
+- using of refs (useRef)
+-  useRef is a hook that allows to directly create a reference to the DOM element in the functional component
+
+connecting to chat server to send and receive messages
+- store the user's input in state, and handle the event when user sends the message
+
+sending our messages to the server so it can broadcast to other users
+- we can store those messages in state
+- i want 2 way communication (server to push data to browser too proactively), use socket
+- axios is only for sending request from browser to the server
+- npm install socket.io-client
+
+setting unread message count feature
+
+SECTION 12
+- improve sign up form + client-side validations
+- useImmerReducer for state management
+- checking to see if user's token has expired
+- after a few days, token should expire and user should be logged out (but server doesn't know until i perform an action that sends a token)
+   - want to avoid a problem where the site is working fine and i can type out a post, but when i submit post, it tells me that my token has expired
+- we want to immediately tell user if their token has expired and force them to log out
+
+how to test if token has expired or not
+- go to backend, controllers>userController.js
+- change the duration of how long a token can last
