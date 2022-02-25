@@ -163,3 +163,7 @@ using reactDOM outside our browser
 - generate a HTML that has the look of the home page, that shows even if the react is still waiting (generateHTML.js)
 - use react to generate HTML outside of our web browser
 - check out NEXT js and Gatsby JS
+
+pushing backend api onto heroku (can't just run locally)
+- https://backend-for-react-app-sher.herokuapp.com/profile/testuser/posts - json of all our posts
+- push frontend react onto netlify
