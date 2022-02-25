@@ -4,9 +4,9 @@ import DispatchContext from "../DispatchContext";
 import { Link } from "react-router-dom";
 import { useImmer } from "use-immer";
 import io from "socket.io-client";
-const socket = io("http://localhost:8080");
 
 function Chat() {
+  const socket = useRef(null);
   const chatField = useRef(null); //ref is like a box we can hold values in, and unlike state, we can directly mutate it
   const chatLog = useRef(null);
   const appState = useContext(StateContext);
@@ -34,7 +34,7 @@ function Chat() {
   function handleSubmit(e) {
     e.preventDefault();
     //send message to chat server, and add it to our state
-    socket.emit("chatFromBrowser", { message: state.fieldValue, token: appState.user.token }); //name of an event type, and object with message and token
+    socket.current.emit("chatFromBrowser", { message: state.fieldValue, token: appState.user.token }); //name of an event type, and object with message and token
     setState(draft => {
       draft.chatMessages.push({ message: draft.fieldValue, username: appState.user.username, avatar: appState.user.avatar }); //add the message to our state array
       draft.fieldValue = ""; //clear out the chat field after i send a message
@@ -43,11 +43,14 @@ function Chat() {
 
   //we want our browser to listen to the 'chatFromBrowser' event - run this the first time the component is ran
   useEffect(() => {
-    socket.on("chatFromServer", message => {
+    socket.current = io("http://localhost:8080"); //only turn on and off the socket when we need to
+    socket.current.on("chatFromServer", message => {
       setState(draft => {
         draft.chatMessages.push(message);
       });
     });
+
+    return () => socket.current.disconnect();
   }, []);
 
   //we want the chat to automatically show the latest messages instead of having to scroll down manually

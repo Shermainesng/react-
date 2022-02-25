@@ -149,3 +149,17 @@ SECTION 12
 how to test if token has expired or not
 - go to backend, controllers>userController.js
 - change the duration of how long a token can last
+
+SECTION 13
+lazy loading (not loading something unless it's officially needed) using suspense
+- users only have to download the users and features they need at that moment, instead of the whole bundled file
+- use lazy loading for CreatePost, it'll render only if user clicks on it. if not, it'll show the suspense fallback loading icons
+- but don't lazy look everything as it will defeat the purpose of JS instant rendering
+   - some components take up very little space, no point in lazy loading it as it'll load instantaneously
+
+create a dist copy of our site
+
+using reactDOM outside our browser
+- generate a HTML that has the look of the home page, that shows even if the react is still waiting (generateHTML.js)
+- use react to generate HTML outside of our web browser
+- check out NEXT js and Gatsby JS
